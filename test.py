@@ -37,5 +37,19 @@ class TestSendPkt(unittest.TestCase):
         sendpkt.sendpacket(self.packet)
         return
 
+    def test_call_sendpacket_keyword(self):
+        """尝试以关键字方式传递包"""
+        sendpkt.sendpacket(packet=self.packet)
+        return
+
+    def test_sendpacket_typeerror(self):
+        """尝试其他类型的参数以产生类型异常"""
+        try:
+            sendpkt.sendpacket(25)
+        except TypeError,e:
+            pass
+        #self.assertEqual(isinstance(e,TypeError),True)
+        return
+
 if __name__=="__main__":
     unittest.main()
