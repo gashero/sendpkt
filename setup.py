@@ -1,26 +1,19 @@
 #! /usr/bin/env python
 # -*- coding: UTF-8 -*-
-# File: linux/setup.py
+# File: setup.py
 # Date: 2007-09-18
 # Author: gashero
 # Copyright@1999-2007, Harry Gashero Liu.
 
 """
-构建脚本
+通用的setup.py文件，自动判断操作系统类型并调用特定的文件
 """
 
-from distutils.core import setup,Extension
+import os
 
-module_exlibnet=Extension('sendpkt',
-        sources=['exlibnet.c',],
-        libraries=['net',]
-        )
-
-setup(name="sendpkt",
-        version="0.1",
-        description="Send ethernet frame in Linux or Win32",
-        ext_modules=[module_exlibnet,],
-        author="gashero",
-        author_email="harry.python@gmail.com",
-        url="http://gashero.yeax.com/"
-        )
+if os.name=="nt":
+    from setup_nt import *
+elif os.name=="posix":
+    from setup_posix import *
+else:
+    raise OSError,"Unknown OS: %s"%os.name
