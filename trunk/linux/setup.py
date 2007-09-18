@@ -11,7 +11,10 @@
 
 from distutils.core import setup,Extension
 
-module_exlibnet=Extension('sendpkt',sources=['exlibnet.c',])
+module_exlibnet=Extension('sendpkt',
+        sources=['exlibnet.c',],
+        libraries=['net',]
+        )
 
 setup(name="sendpkt",
         version="0.1",
