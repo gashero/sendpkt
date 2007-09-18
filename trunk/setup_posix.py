@@ -6,7 +6,7 @@
 # Copyright@1999-2007, Harry Gashero Liu.
 
 """
-构建脚本
+posix兼容构建脚本，主要用于linux
 """
 
 from distutils.core import setup,Extension
