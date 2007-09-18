@@ -16,11 +16,11 @@ unsigned int exlibnet_sendpacket(unsigned char* packet) {
 
 //----------------------Python接口函数--------------------------------------
 
-static PyObject* sendpacket(PyObject* self, PyObject* args, PyObject* keywds) {
+static PyObject* sendpacket(PyObject* self, PyObject* args, PyObject* kwargs) {
     PyObject* packet=NULL;
     printf("hello");
     static char* kwlist[]={"packet",NULL};
-    if (!PyArg_ParseTupleAndKeywords(args,keywds,"O",kwlist,packet)) {
+    if (!PyArg_ParseTupleAndKeywords(args,kwargs,"O",kwlist,&packet)) {
         return NULL;
     }
     printf("Address: 0x%08x\n",(unsigned int)packet);
@@ -28,7 +28,7 @@ static PyObject* sendpacket(PyObject* self, PyObject* args, PyObject* keywds) {
 }
 
 static PyMethodDef SendPktMethods[]={
-    {"sendpacket",(PyCFunction)sendpacket,METH_VARARGS|METH_KEYWORDS,"Send a packet to ethernet"},
+    {"sendpacket",(PyCFunction)sendpacket,METH_VARARGS | METH_KEYWORDS,"Send a packet to ethernet"},
     {NULL,NULL,0,NULL}
 };
 
