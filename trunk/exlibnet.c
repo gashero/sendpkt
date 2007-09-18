@@ -32,7 +32,7 @@ static PyObject* sendpacket(PyObject* self, PyObject* args, PyObject* kwargs) {
     if (!PyArg_ParseTupleAndKeywords(args,kwargs,"O",kwlist,&packetobj)) {
         return NULL;
     }
-    printf("Address: 0x%08x\n",(unsigned int)packetobj);
+    //printf("Address: 0x%08x\n",(unsigned int)packetobj);
     if (!PyString_Check(packetobj)) {
         PyErr_SetString(PyExc_TypeError,"packet must be string object");
         return NULL;

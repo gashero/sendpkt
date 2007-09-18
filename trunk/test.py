@@ -19,7 +19,7 @@ class TestSendPkt(unittest.TestCase):
     """测试用例类"""
 
     def setUp(self):
-        self.packet="fjaiewjigawojgewagjoewgjeaowjgoewogjeawijfoewogawepg"
+        self.packet="a"*80
         return
 
     def tearDown(self):
