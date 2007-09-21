@@ -16,9 +16,14 @@ def main():
     pc=pcap.pcap()
     pc.setfilter(PCAP_FILTER)
     try:
+        pc.setnonblock(True)
         for ptime,pdata in pc:
             print time.strftime(DATETIME_FORMAT)
             print repr(str(pdata))
+        #while True:
+        #    ptime,pdata=pc.next()
+        #    print time.strftime(DATETIME_FORMAT)
+        #    print repr(str(pdata))
     except KeyboardInterrupt:
         print "EXIT"
     return
