@@ -1,0 +1,5 @@
+= WinPcap开发包WpdPack =
+
+WpdPack是WinPcap的开发包，提供了使用WinPcap必须的头文件和库文件，现阶段开始SendPkt使用的是WinPcap3.1及其对应的WpdPack。
+
+可以访问WinPcap的官方网站 [[http://www.winpcap.org/]] 来了解更多细节。
