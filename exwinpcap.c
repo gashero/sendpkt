@@ -25,10 +25,26 @@ static PyObject* sendpacket(PyObject* self, PyObject* args, PyObject* kwargs) {
     packet=(unsigned char*)PyString_AsString(packetobj);
     packet_s=PyString_Size(packetobj);
     //初始化Winpcap
-    pcap_t* p;
+    pcap_t* p=NULL;
+    char* device=NULL;
     char errbuf[PCAP_ERRBUF_SIZE];
-    //int pcap_sendpacket(pcap_t* p, u_char* buffer, int size);
-    return NULL;
+    p=pcap_open_live(device,BUFSIZ,1,0,errbuf);
+    if (p==NULL) {
+        PyErr_SetString(PyExc_RuntimeError,errbuf);
+        return NULL;
+    }
+    //发送数据包
+    int bytes=0;
+    bytes=pcap_sendpacket(p,packet,packet_s);
+    if (bytes<0) {
+        PyErr_SetString(PyExc_RuntimeError,pcap_geterr(p));
+        return NULL;
+    }else {
+        printf("Bytes=%d\n",bytes);
+    }
+    //销毁winpcap句柄
+    pcap_close(p);
+    Py_RETURN_NONE;
 }
 
 static PyMethodDef SendPktMethods[]={
