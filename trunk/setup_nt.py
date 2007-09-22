@@ -12,7 +12,9 @@ from distutils.core import setup,Extension
 
 module_exwinpcap=Extension('sendpkt',
         sources=['exwinpcap.c',],
-        libraries=['wpcap',]
+        libraries=['wpcap',],
+        include_dirs=['../WpdPack/Include',],
+        library_dirs=['../WpdPack/Lib',]
         )
 
 setup(name="sendpkt",
