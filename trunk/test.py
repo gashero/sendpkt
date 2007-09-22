@@ -10,13 +10,14 @@
 """
 
 import unittest
+import os
 
 import dpkt
 
 import sendpkt
 
 class TestSendPkt(unittest.TestCase):
-    """测试用例类"""
+    """测试发包函数"""
 
     def setUp(self):
         self.packet="a"*80
@@ -51,6 +52,32 @@ class TestSendPkt(unittest.TestCase):
         #self.assertEqual(isinstance(e,TypeError),True)
         return
 
+class TestFindAllDevs(unittest.TestCase):
+    """测试获取设备列表"""
+
+    def test_findalldevs(self):
+        """测试获取设备列表函数"""
+        devlist=sendpkt.findalldevs()
+        self.assertEqual((len(devlist)>=1),True)
+        return
+
+    def test_notparam(self):
+        """测试对findalldevs()函数传递参数时抛出异常"""
+        e=None
+        try:
+            devlist=sendpkt.findalldevs('faeij')
+        except Exception,e:
+            pass
+        self.assertEqual(isinstance(e,TypeError),True)
+        return
+
+    def test_nt_generic(self):
+        """测试nt类操作系统下，肯定有个网口是通用设备"""
+        if os.name=='nt':
+            default_devname="\\Device\\NPF_GenericDialupAdapter"
+            devlist=sendpkt.findalldevs()
+            self.assertEqual((default_devname in devlist),True)
+        return
+
 if __name__=="__main__":
-    #unittest.main()
-    print sendpkt.findalldevs()
+    unittest.main()

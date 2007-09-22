@@ -63,6 +63,10 @@ static PyObject* sendpacket(PyObject* self, PyObject* args, PyObject* kwargs) {
 }
 
 static PyObject* findalldevs(PyObject* self, PyObject* args) {
+    //确保没有输入参数
+    if (!PyArg_ParseTuple(args,""))
+        return NULL;
+    //获取设备列表
     int c=0;
     pcap_if_t* first;
     pcap_if_t* now;
@@ -75,19 +79,18 @@ static PyObject* findalldevs(PyObject* self, PyObject* args) {
     //循环插入设备名字符串
     PyObject* devlist=NULL;
     PyObject* devname=NULL;
-    char* devname_str=NULL;
     devlist=PyList_New(0);
     now=first;
     while (1) {
         //printf("DEV: %s\n",now->name);
-        devname_str=(char*)malloc(MAX_DEVICE_NAME_LENGTH+1);
-        strncpy(devname_str,now->name,MAX_DEVICE_NAME_LENGTH);
-        devname=PyString_FromString(devname_str);
+        //XXX Python的字符串构造函数看来是可以利用已有的字符串，而不必自己重新申请空间
+        devname=PyString_FromString(now->name);
         PyList_Append(devlist,devname);
         now=now->next;
         if (now==NULL)
             break;
     }
+    //释放原设备列表占用的资源
     pcap_freealldevs(first);
     return devlist;
 }
