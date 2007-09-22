@@ -17,5 +17,8 @@ python setup.py bdist_wininst
 另外需要小心的一点就是，在Win32下编译SendPkt需要用到Winpcap的开发包WpdPack。现在的版本使用的Winpcap3.1和对应的WpdPack。这个开发包应该跟SendPkt的svn目录放在同一个路径下，这样才方便setup_nt.py找到路径。如：
 
 some_dir
+
     + sendpkt ...
+
     + WpdPack ...
+ 
