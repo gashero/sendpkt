@@ -21,6 +21,8 @@ class TestSendPkt(unittest.TestCase):
 
     def setUp(self):
         self.packet="a"*80
+        devlist=sendpkt.findalldevs()
+        self.device=devlist[-1]
         return
 
     def tearDown(self):
@@ -35,12 +37,12 @@ class TestSendPkt(unittest.TestCase):
 
     def test_call_sendpacket(self):
         """尝试调用一下sendpacket函数"""
-        sendpkt.sendpacket(self.packet)
+        sendpkt.sendpacket(self.packet,self.device)
         return
 
     def test_call_sendpacket_keyword(self):
         """尝试以关键字方式传递包"""
-        sendpkt.sendpacket(packet=self.packet)
+        sendpkt.sendpacket(packet=self.packet,device=self.device)
         return
 
     def test_sendpacket_typeerror(self):

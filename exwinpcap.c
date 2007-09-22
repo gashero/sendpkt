@@ -12,7 +12,6 @@
 
 static PyObject* sendpacket(PyObject* self, PyObject* args, PyObject* kwargs) {
     //获取输入参数
-    PyObject* packetobj=NULL;
     unsigned char* packet=NULL;
     unsigned int packet_s=0;
     char* device=NULL;
@@ -21,28 +20,10 @@ static PyObject* sendpacket(PyObject* self, PyObject* args, PyObject* kwargs) {
         return NULL;
     }
     //printf("Address: 0x%08x\n",(unsigned int)packetobj);
-    if (!PyString_Check(packetobj)) {
-        PyErr_SetString(PyExc_TypeError,"packet must be string object");
-        return NULL;
-    }
-    packet=(unsigned char*)PyString_AsString(packetobj);
-    packet_s=PyString_Size(packetobj);
+    //printf("Device: %s\n",device);
     //初始化Winpcap
     pcap_t* p=NULL;
-    //char* device=NULL;
-    //char device[]="\\Device\\NPF_GenericDialupAdapter";
-    //char device[]="\\Device\\NPF_{F8F5ED1E-36B4-4E50-83B6-8CAA999A5DE4}";
     char errbuf[PCAP_ERRBUF_SIZE];
-    bpf_u_int32 net_mask,net_ip;
-    //device=pcap_lookupdev(errbuf);
-    if (device==NULL) {
-        PyErr_SetString(PyExc_RuntimeError,errbuf);
-        return NULL;
-    }
-    printf("Device: %s\n",device);
-    pcap_lookupnet(device,&net_ip,&net_mask,errbuf);
-    //XXX xxx
-    printf("ip=%u,mask=%u\n",net_ip,net_mask);
     p=pcap_open_live(device,BUFSIZ,1,0,errbuf);
     if (p==NULL) {
         PyErr_SetString(PyExc_RuntimeError,errbuf);
@@ -54,8 +35,6 @@ static PyObject* sendpacket(PyObject* self, PyObject* args, PyObject* kwargs) {
     if (bytes<0) {
         PyErr_SetString(PyExc_RuntimeError,pcap_geterr(p));
         return NULL;
-    }else {
-        printf("Bytes=%d\n",bytes);
     }
     //销毁winpcap句柄
     pcap_close(p);
