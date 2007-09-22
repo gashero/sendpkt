@@ -6,10 +6,10 @@
 compiler=mingw32
 }}}
 之后重新使用标准的distutils方式构建和安装即可。当然，确保你的PATH路径可以找到MinGW的gcc.exe。
-
+{{{
 python setup.py build
 python setup.py install
-
+}}}
 你还可以自己构造Windows安装包，如下：
 
 python setup.py bdist_wininst
@@ -21,6 +21,7 @@ some_dir
     + sendpkt ...
 
     + WpdPack ...
+ 
  
  
  
