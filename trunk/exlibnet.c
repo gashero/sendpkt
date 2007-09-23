@@ -62,13 +62,13 @@ static PyObject* findalldevs(PyObject* self, PyObject* args) {
     devlist=PyList_New(0);
     now=first;
     while (1) {
+        if (now==NULL)
+            break;
         //printf("DEV: %s\n",now->name);
         //XXX Python的字符串构造函数看来是可以利用已有的字符串，而不必自己重新申请空间
         devname=PyString_FromString(now->name);
         PyList_Append(devlist,devname);
         now=now->next;
-        if (now==NULL)
-            break;
     }
     //释放原设备列表占用的资源
     pcap_freealldevs(first);

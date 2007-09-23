@@ -22,7 +22,16 @@ class TestSendPkt(unittest.TestCase):
     def setUp(self):
         self.packet="a"*80
         devlist=sendpkt.findalldevs()
-        self.device=devlist[-1]
+        if devlist:
+            if os.name=="nt":
+                self.device=devlist[-1] #\\NPF\\....
+            elif os.name=="posix":
+                self.device=devlist[0] #eth0
+            else:
+                self.device=devlist[0]
+        else:
+            self.device=""
+            raise OSError,"You must run in root mode"
         return
 
     def tearDown(self):
