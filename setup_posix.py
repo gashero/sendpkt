@@ -22,5 +22,5 @@ setup(name="sendpkt",
         ext_modules=[module_exlibnet,],
         author="gashero",
         author_email="harry.python@gmail.com",
-        url="http://gashero.yeax.com/"
+        url="http://code.google.com/p/sendpkt/"
         )

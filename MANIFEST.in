@@ -1,2 +1,5 @@
-include README MANIFEST.in
-include exlibnet.c setup.py
+include README README.html MANIFEST.in setup.py
+include exlibnet.c setup_posix.py
+include exwinpcap.c setup_nt.py
+include test.py listener.py
+include INSTALL
