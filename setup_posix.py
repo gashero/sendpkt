@@ -13,7 +13,7 @@ from distutils.core import setup,Extension
 
 module_exlibnet=Extension('sendpkt',
         sources=['exlibnet.c',],
-        libraries=['net',]
+        libraries=['net','pcap']
         )
 
 setup(name="sendpkt",
