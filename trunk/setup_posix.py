@@ -17,7 +17,7 @@ module_exlibnet=Extension('sendpkt',
         )
 
 setup(name="sendpkt",
-        version="0.1",
+        version="0.2",
         description="Send ethernet frame in Linux or Win32",
         ext_modules=[module_exlibnet,],
         author="gashero",
