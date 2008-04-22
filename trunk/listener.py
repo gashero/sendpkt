@@ -16,7 +16,7 @@ def main():
     pc=pcap.pcap()
     pc.setfilter(PCAP_FILTER)
     try:
-        pc.setnonblock(True)
+        #pc.setnonblock(True)
         print "Start..."
         for ptime,pdata in pc:
             print time.strftime(DATETIME_FORMAT)
