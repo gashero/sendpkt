@@ -14,8 +14,8 @@ from distutils.core import setup,Extension
 module_exlibnet=Extension('sendpkt',
         sources=['exlibnet.c',],
         libraries=['net','pcap'],
-        include_dirs=['/usr/local/include',],
-        library_dirs=['/usr/local/lib',],
+        include_dirs=['/usr/local/include','/usr/local/include/libnet11',],
+        library_dirs=['/usr/local/lib','/usr/local/lib/libnet11',],
         )
 
 setup(name="sendpkt",
