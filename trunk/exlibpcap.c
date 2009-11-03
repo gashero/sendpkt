@@ -76,13 +76,46 @@ char sendpkt_pcap_help[]="Create pcap object.\n\
 pcapobj=pcap(ifname=None,bpfstr="",snaplen=4096,promisc=1,to_ms=0)\n\
 >>> pc=pcap()";
 static PyObject* sendpkt_pcap(PyObject* self, PyObject* args, PyObject* kwargs) {
-    Py_RETURN_NONE;
+    char errbuf[PCAP_ERRBUF_SIZE];
+    static char *kwlist[]={"ifname","bpfstr","snaplen","promisc","to_ms",NULL};
+    static char *ifname=NULL, *bpfstr=NULL;
+    int snaplen=4096,promisc=1,to_ms=0;
+    pcap_t* pc;
+    struct bpf_program bpfprogram;
+    if (!PyArg_ParseTupleAndKeywords(args,kwargs,"|ssiii",kwlist,&ifname,&bpfstr,&snaplen,&promisc,&to_ms))
+        return NULL;
+    if (! ifname) {
+        ifname=pcap_lookupdev(errbuf);
+        if (! ifname) {
+            PyErr_SetString(PyExc_RuntimeError,errbuf);
+            return NULL;
+        }
+    }
+    if (! bpfstr)
+        bpfstr="";
+    pc=pcap_open_live(ifname,snaplen,promisc,to_ms,errbuf);
+    if (! pc) {
+        PyErr_SetString(PyExc_RuntimeError,errbuf);
+        return NULL;
+    }
+    if (pcap_compile(pc,&bpfprogram,bpfstr,0,-1)) {
+        PyErr_SetString(PyExc_RuntimeError,"pcap_compile() return not 0");
+        return NULL;
+    }
+    pcap_setfilter(pc,&bpfprogram);
+    pcap_freecode(&bpfprogram);
+    return Py_BuildValue("l",(long)pc);
 }
 
-/*
- * Close pcap object
- */
+char sendpkt_close_help[]="Close pcap object\n\
+close(pcapobj)\n\
+>>> close(pcapobj)";
 static PyObject* sendpkt_close(PyObject* self, PyObject* args, PyObject* kwargs) {
+    static char *kwlist[]={"pcapobj",NULL};
+    pcap_t *pc;
+    if (!PyArg_ParseTupleAndKeywords(args,kwargs,"l",kwlist,(pcap_t*)&pc))
+        return NULL;
+    pcap_close(pc);
     Py_RETURN_NONE;
 }
 
