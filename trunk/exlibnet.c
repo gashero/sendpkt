@@ -2,7 +2,7 @@
  * File: linux/exlibnet.c
  * Date: 2007-09-18
  * Author: gashero
- * Copyright@1999-2007, Harry Gashero Liu.
+ * Copyright@1999-2009, Harry Gashero Liu.
  */
 
 #include <Python.h>
@@ -12,7 +12,7 @@
 #define MAX_DEVICE_NAME_LENGTH 255
 
 static PyObject* sendpacket(PyObject* self, PyObject* args, PyObject* kwargs) {
-    //获取输入参数
+    //Get input parameters
     unsigned char* packet=NULL;
     unsigned int packet_s=0;
     char* device=NULL;
@@ -22,7 +22,7 @@ static PyObject* sendpacket(PyObject* self, PyObject* args, PyObject* kwargs) {
     }
     //printf("Address: 0x%08x\n",(unsigned int)packetobj);
     //printf("Device: %s\n",device);
-    //初始化libnet
+    //initial libnet
     libnet_t* l;
     char errbuf[LIBNET_ERRBUF_SIZE];
     l=libnet_init(LIBNET_LINK_ADV,device,errbuf);
@@ -30,23 +30,23 @@ static PyObject* sendpacket(PyObject* self, PyObject* args, PyObject* kwargs) {
         PyErr_SetString(PyExc_RuntimeError,errbuf);
         return NULL;
     }
-    //发送数据包
+    //send packet
     int bytes=0;
     bytes=libnet_adv_write_link(l,packet,packet_s);
     if (bytes<0) {
         PyErr_SetString(PyExc_RuntimeError,libnet_geterror(l));
         return NULL;
     }
-    //销毁libnet句柄
+    //release libnet
     libnet_destroy(l);
     Py_RETURN_NONE;
 }
 
 static PyObject* findalldevs(PyObject* self, PyObject* args) {
-    //确保没有输入参数
+    //make sure no parameters
     if (!PyArg_ParseTuple(args,""))
         return NULL;
-    //获取设备列表
+    //get device list
     int c=0;
     pcap_if_t* first;
     pcap_if_t* now;
@@ -56,7 +56,7 @@ static PyObject* findalldevs(PyObject* self, PyObject* args) {
         PyErr_SetString(PyExc_RuntimeError,errbuf);
         return NULL;
     }
-    //循环插入设备名字符串
+    //insert device name into list
     PyObject* devlist=NULL;
     PyObject* devname=NULL;
     devlist=PyList_New(0);
@@ -65,12 +65,11 @@ static PyObject* findalldevs(PyObject* self, PyObject* args) {
         if (now==NULL)
             break;
         //printf("DEV: %s\n",now->name);
-        //XXX Python的字符串构造函数看来是可以利用已有的字符串，而不必自己重新申请空间
         devname=PyString_FromString(now->name);
         PyList_Append(devlist,devname);
         now=now->next;
     }
-    //释放原设备列表占用的资源
+    //release pcap_if_t space
     pcap_freealldevs(first);
     return devlist;
 }
