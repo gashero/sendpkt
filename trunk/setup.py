@@ -10,10 +10,32 @@
 """
 
 import os
+from distutils.core import setup,Extension
 
 if os.name=="nt":
-    from setup_nt import *
+    module_exwinpcap=Extension('sendpkt',
+            sources=['exwinpcap.c',],
+            libraries=['wpcap',],
+            include_dirs=['../WpdPack/Include',],
+            library_dirs=['../WpdPack/Lib',],
+            )
+    extmods=[module_exwinpcap,]
 elif os.name=="posix":
-    from setup_posix import *
+    module_exlibpcap=Extension('sendpkt',
+            sources=['exlibpcap.c',],
+            libraries=['pcap'],
+            include_dirs=['/usr/local/include',],
+            library_dirs=['/usr/local/lib',],
+            )
+    extmods=[module_exlibpcap,]
 else:
     raise OSError,"Unknown OS: %s"%os.name
+
+setup(name='sendpkt',
+        version='0.3',
+        description='Send ethernet frame in Linux or Win32',
+        ext_modules=extmods,
+        author='gashero',
+        author_email='harry.python@gmail.com',
+        url='http://sendpkt.googlecode.com/',
+        )
