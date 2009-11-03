@@ -13,16 +13,22 @@
 
 #define MAX_DEVICE_NAME_LENGTH 256
 
-/*
- * Find network interface
- */
-static PyObject* sendpkt_finddevs(PyObject* self, PyObject* args, PyObject* kwargs) {
+char sendpkt_finddevs_help[]="Find all network interfaces.\n\
+iflist=finddevs()\n\
+>>> finddevs()\n\
+[(ifname,description,addresses,flags),('lo0',None,[],1)]";
+static PyObject* sendpkt_finddevs(PyObject* self, PyObject* args) {
     if (!PyArg_ParseTuple(args,""))
         return NULL;
     int c=0;
     pcap_if_t *first, *now;
     //pcap_addr_t *pa_first, *pa_now;
     char errbuf[PCAP_ERRBUF_SIZE];
+    //new test
+    /*char *netname;
+    netname=pcap_lookupdev(errbuf);
+    printf("netname: %s\n",netname);*/
+    //new test
     if (pcap_findalldevs(&first,errbuf)) {
         PyErr_SetString(PyExc_RuntimeError,errbuf);
         return NULL;
@@ -66,17 +72,17 @@ static PyObject* sendpkt_finddevs(PyObject* self, PyObject* args, PyObject* kwar
     return devlist;
 }
 
-/*
- * Create new pcap object
- */
-static PyObject* sendpkg_pcap(PyObject* self, PyObject* args, PyObject* kwargs) {
+char sendpkt_pcap_help[]="Create pcap object.\n\
+pcapobj=pcap(ifname=None,bpfstr="",snaplen=4096,promisc=1,to_ms=0)\n\
+>>> pc=pcap()";
+static PyObject* sendpkt_pcap(PyObject* self, PyObject* args, PyObject* kwargs) {
     Py_RETURN_NONE;
 }
 
 /*
  * Close pcap object
  */
-static PyObject* sendpkt_pcapclose(PyObject* self, PyObject* args, PyObject* kwargs) {
+static PyObject* sendpkt_close(PyObject* self, PyObject* args, PyObject* kwargs) {
     Py_RETURN_NONE;
 }
 
@@ -95,7 +101,11 @@ static PyObject* sendpkt_sendpacket(PyObject* self, PyObject* args, PyObject* kw
 }
 
 static PyMethodDef SendPktMethods[]={
-    {"finddevs",        (PyCFunction)sendpkt_finddevs,      METH_VARARGS | METH_KEYWORDS,   "Find all network interfaces."},
+    {"finddevs",    (PyCFunction)sendpkt_finddevs,      METH_VARARGS,                   sendpkt_finddevs_help},
+    {"pcap",        (PyCFunction)sendpkt_pcap,          METH_VARARGS | METH_KEYWORDS,   sendpkt_pcap_help},
+    {"close",       (PyCFunction)sendpkt_close,         METH_VARARGS | METH_KEYWORDS,   "Close pcap object"},
+    {"capture",     (PyCFunction)sendpkt_capture,       METH_VARARGS | METH_KEYWORDS,   "Capture packet from ethernet"},
+    {"sendpacket",  (PyCFunction)sendpkt_sendpacket,    METH_VARARGS | METH_KEYWORDS,   "Send packet to ethernet"},
     {NULL,NULL,0,NULL}
 };
 
