@@ -103,7 +103,7 @@ static PyObject* sendpkt_pcap(PyObject* self, PyObject* args, PyObject* kwargs) 
         return NULL;
     }
     pcap_setfilter(pc,&bpfprogram);
-    pcap_freecode(&bpfprogram);
+    pcap_freecode(&bpfprogram);     //XXX: is there wrong?
     return Py_BuildValue("l",(long)pc);
 }
 
@@ -119,16 +119,19 @@ static PyObject* sendpkt_close(PyObject* self, PyObject* args, PyObject* kwargs)
     Py_RETURN_NONE;
 }
 
-/*
- * Capture packet with timeout
- */
+char sendpkt_capture_help[]="Capture packet from ethernet.\n\
+ptime,pdata=capture(pcapobj)";
 static PyObject* sendpkt_capture(PyObject* self, PyObject* args, PyObject* kwargs) {
+    static char *kwlist[]={"pcapobj","to_ms",NULL};
+    pcap_t *pc;
+    int to_ms;
+    if (!PyArg_ParseTupleAndKeywords(args,kwargs,"l|i",kwlist,(pcap_t*)&pc,&to_ms))
+        return NULL;
     Py_RETURN_NONE;
 }
 
-/*
- * Send packet
- */
+char sendpkt_sendpacket_help[]="Send packet to ethernet.\n\
+sendpacket(pcapobj,packet)";
 static PyObject* sendpkt_sendpacket(PyObject* self, PyObject* args, PyObject* kwargs) {
     Py_RETURN_NONE;
 }
@@ -136,9 +139,9 @@ static PyObject* sendpkt_sendpacket(PyObject* self, PyObject* args, PyObject* kw
 static PyMethodDef SendPktMethods[]={
     {"finddevs",    (PyCFunction)sendpkt_finddevs,      METH_VARARGS,                   sendpkt_finddevs_help},
     {"pcap",        (PyCFunction)sendpkt_pcap,          METH_VARARGS | METH_KEYWORDS,   sendpkt_pcap_help},
-    {"close",       (PyCFunction)sendpkt_close,         METH_VARARGS | METH_KEYWORDS,   "Close pcap object"},
-    {"capture",     (PyCFunction)sendpkt_capture,       METH_VARARGS | METH_KEYWORDS,   "Capture packet from ethernet"},
-    {"sendpacket",  (PyCFunction)sendpkt_sendpacket,    METH_VARARGS | METH_KEYWORDS,   "Send packet to ethernet"},
+    {"close",       (PyCFunction)sendpkt_close,         METH_VARARGS | METH_KEYWORDS,   sendpkt_close_help},
+    {"capture",     (PyCFunction)sendpkt_capture,       METH_VARARGS | METH_KEYWORDS,   sendpkt_capture_help},
+    {"sendpacket",  (PyCFunction)sendpkt_sendpacket,    METH_VARARGS | METH_KEYWORDS,   sendpkt_sendpacket_help},
     {NULL,NULL,0,NULL}
 };
 
