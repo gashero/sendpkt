@@ -133,6 +133,17 @@ static PyObject* sendpkt_capture(PyObject* self, PyObject* args, PyObject* kwarg
 char sendpkt_sendpacket_help[]="Send packet to ethernet.\n\
 sendpacket(pcapobj,packet)";
 static PyObject* sendpkt_sendpacket(PyObject* self, PyObject* args, PyObject* kwargs) {
+    static char *kwlist[]={"pcapobj","packet",NULL};
+    pcap_t *pc;
+    unsigned char *buf;
+    int buf_s;
+    if (!PyArg_ParseTupleAndKeywords(args,kwargs,"ls#",kwlist,(pcap_t*)&pc,&buf,&buf_s))
+        return NULL;
+    //printf("pcap=%p, buf=%s, size=%d\n",pc,buf,buf_s);
+    if (pcap_sendpacket(pc,buf,buf_s)) {
+        PyErr_SetString(PyExc_RuntimeError,pcap_geterr(pc));
+        return NULL;
+    }
     Py_RETURN_NONE;
 }
 
